@@ -11,6 +11,7 @@ public class FlujosCaracteres {
 
         //leerArchivoCaracteres(archivo);
         leerArchivoLineas(archivo);
+
     }
 
 
