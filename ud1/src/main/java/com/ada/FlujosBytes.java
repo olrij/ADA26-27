@@ -15,13 +15,14 @@ public class FlujosBytes {
 
         String ruta="./datos/notas.dat";
         //crearArchivo(ruta);
-        //leerArchivo(ruta);
+        leerArchivo(ruta);
 
+        /* 
         ArrayList<Double> notas = obtenerNotasAlumno(ruta, 4);
 
         for(double d:notas){
             System.out.println(d);
-        }
+        }*/
         
     }
 
