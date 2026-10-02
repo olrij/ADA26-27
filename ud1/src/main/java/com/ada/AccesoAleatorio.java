@@ -1,4 +1,4 @@
-package com;
+package com.ada;
 
 import java.io.EOFException;
 import java.io.IOException;
