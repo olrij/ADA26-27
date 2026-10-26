@@ -2,6 +2,7 @@ package com.ada;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,13 +30,12 @@ public class BusquedasXPath {
         String ruta="/home/u/Descargas/personas.xml";
         Document doc=pasarXMLaDOM(ruta);
 
-        // Crea el objeto XpathFactory
-        XPath xpath=(XPath) XPathFactory.newInstance().newXPath();
+        
 
 
-        //mostrarInfoJuan(xpath, doc);
+        mostrarInfoJuan(doc);
         //mostrarPersonasMayoresDeX(xpath, doc, 30);
-        borrarPersonasIDMayorAX(xpath, doc, 200, ruta);
+        //borrarPersonasIDMayorAX(xpath, doc, 200, ruta);
 
 
 
@@ -43,48 +43,17 @@ public class BusquedasXPath {
     
     }
 
-    public static void mostrarInfoJuan(XPath xpath,Document doc) throws XPathExpressionException{
+    public static void mostrarInfoJuan(Document doc) throws XPathExpressionException{
+
+        // Crea el objeto XpathFactory
+        XPath xpath=(XPath) XPathFactory.newInstance().newXPath();
 
         //Crea un XpathExpression con la consulta deseada
         String xpathExpression="/personas/persona[./nombre='Juan']";
         //Consultas
         NodeList nodos=(NodeList) xpath.evaluate(xpathExpression,doc, XPathConstants.NODESET);
 
-        for(int i=0;i<nodos.getLength();i++){
-
-            Element persona=(Element)nodos.item(i);
-
-            
-            NodeList hp = persona.getChildNodes();
-
-            for(int j=0;j<hp.getLength();j++){
-
-                Node hhp=hp.item(j);
-
-                switch (hhp.getNodeType()) {
-                    case Node.ELEMENT_NODE:
-                        Element ehp=(Element) hhp;
-                        System.out.println(ehp.getTagName()+": "+ehp.getTextContent());
-                        break;
-
-                    case Node.TEXT_NODE:
-                        
-                        break;
-                
-                    default:
-                        break;
-                }
-
-            }
-
-
-            
-
-
-
-        }
-
-
+        // ... 
 
     }
 
@@ -192,5 +161,26 @@ public class BusquedasXPath {
         //6o Realizamos la transformación.
         transformer.transform(source, result);
     }
+
+
+
+
+
+    private static String leerCadena(RandomAccessFile raf) throws IOException {
+        int longitud=15;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < longitud; i++) {
+            sb.append(raf.readChar()); // cada readChar lee 2 bytes
+        }
+        return sb.toString().trim(); // quita el relleno de espacios
+    }
+
+
+    private static void escrbirCadena(RandomAccessFile raf, String nombre) throws IOException {
+        // Rellena con espacios hasta 15 caracteres o trunca si es más largo
+        String nombreFijo = String.format("%-15.15s", nombre);
+        raf.writeChars(nombreFijo); // escribe exactamente 30 bytes
+    }
+
 
 }
