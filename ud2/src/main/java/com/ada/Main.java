@@ -8,7 +8,9 @@ public class Main {
 
         //gestor.realizarOperacionDML("INSERT INTO comercial VALUES(101, 'Daniel', 'Sáez', 'Vega', 0.15);");
         //gestor.consultarTodosComerciales();
-        gestor.consultarComisionPorID(3);
+        //gestor.consultarComisionPorID(3);
+
+        gestor.consultarPedidosPersonaConCantidadSuperiorAX(1, 500);
 
     }
 }

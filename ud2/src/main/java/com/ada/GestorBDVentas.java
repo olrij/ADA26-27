@@ -2,6 +2,7 @@ package com.ada;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -47,15 +48,43 @@ public class GestorBDVentas {
     }
 
         public void consultarComisionPorID(int idC) throws SQLException{
-        Statement st = con.createStatement();
+        PreparedStatement pst = con.prepareStatement("SELECT id,comision FROM comercial WHERE id=?;");
 
-        ResultSet rs = st.executeQuery("SELECT id,comision FROM comercial WHERE id="+idC+";");
+
+        pst.setInt(1,idC);
+
+        ResultSet rs = pst.executeQuery();
+
 
         while(rs.next()){
             int id=rs.getInt("id");
             float comision=rs.getFloat(2);
 
             System.out.println(id+" "+comision);
+
+        }
+        
+    }
+
+
+    public void consultarPedidosPersonaConCantidadSuperiorAX(int idCl,double cantidadPed) throws SQLException{
+        PreparedStatement pst = con.prepareStatement("SELECT * FROM pedido WHERE id_cliente=? and cantidad>?;");
+
+
+        pst.setInt(1,idCl);
+        pst.setDouble(2, cantidadPed);
+
+        ResultSet rs = pst.executeQuery();
+
+
+        while(rs.next()){
+            int idP=rs.getInt(1);
+            double cantidad=rs.getDouble(2);
+            String fecha=rs.getString(3);
+            int id_cliente=rs.getInt("id_cliente");
+            int id_comercial=rs.getInt("id_comercial");
+
+            System.out.println(idP+" "+cantidad+" "+fecha+" "+id_cliente+" "+id_comercial);
 
         }
         
