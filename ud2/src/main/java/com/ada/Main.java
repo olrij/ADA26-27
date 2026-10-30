@@ -10,7 +10,16 @@ public class Main {
         //gestor.consultarTodosComerciales();
         //gestor.consultarComisionPorID(3);
 
-        gestor.consultarPedidosPersonaConCantidadSuperiorAX(1, 500);
+        //gestor.consultarPedidosPersonaConCantidadSuperiorAX(1, 500);
+
+        //gestor.verMetadatosBD("ventas");
+
+        //gestor.verClientesCiudad("Córdoba");
+
+        gestor.insertarInfoCliente();
 
     }
+
+    
+
 }

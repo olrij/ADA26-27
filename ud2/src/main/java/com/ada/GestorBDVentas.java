@@ -1,6 +1,8 @@
 package com.ada;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +12,7 @@ import java.sql.Statement;
 public class GestorBDVentas {
 
 
-    private String url="jdbc:mysql://192.168.129.49:3306/ventas";
+    private String url="jdbc:mysql://localhost:3306/ventas";
     private String user="root";
     private String password="1234";
     private Connection con;
@@ -89,6 +91,114 @@ public class GestorBDVentas {
         }
         
     }
+
+    public void verMetadatosBD(String nombreBD) throws SQLException{
+        DatabaseMetaData metadatos = con.getMetaData();
+
+        System.out.println(metadatos.getDatabaseProductName());
+        System.out.println(metadatos.getDriverName());
+
+
+        System.out.println("-----------------------------");
+
+        ResultSet rs = metadatos.getTables(nombreBD, null, null, new String[] {"TABLE"});
+
+        while(rs.next()){
+            String tabla=rs.getString("TABLE_NAME");
+            System.out.println("Tabla: "+tabla);
+
+            // Recorremos las columnas
+
+            ResultSet rs2 = metadatos.getColumns(nombreBD, null, tabla, null);
+        
+
+            while(rs2.next()){
+                System.out.println(rs2.getString("COLUMN_NAME")+" "+rs2.getString("TYPE_NAME"));
+
+            }
+            System.out.println("-----------------------------");
+
+        }
+
+    }
+
+
+
+    /* 
+    delimiter //
+    create procedure verClientesCiudad(in ciu varchar(30))
+    begin
+        SELECT id,nombre,ciudad FROM cliente WHERE ciudad like ciu;
+    end //
+    */
+
+    public void verClientesCiudad(String ciudad) throws SQLException{
+
+            CallableStatement cs=con.prepareCall("CALL verClientesCiudad(?)");
+
+            cs.setString(1,ciudad);
+
+            ResultSet rs = cs.executeQuery();
+
+            while(rs.next()){
+                int id=rs.getInt("id");
+                String nombre=rs.getString("nombre");
+                String ciudadCl=rs.getString("ciudad");
+                System.out.println(id+" "+nombre+" "+ciudadCl);
+
+        }
+
+
+
+
+    }
+
+    public void insertarInfoCliente(){
+
+        try {
+
+            con.setAutoCommit(false);
+
+            Statement st=con.createStatement();
+
+            st.execute("INSERT INTO cliente VALUES(90, 'Aarón', 'bLA', 'Gómez', 'Sevilla', 90);");
+
+            st.execute("INSERT INTO pedido VALUES(90, 150.5, '2017-10-05', 90, 2);");
+            st.execute("INSERT INTO pedido VALUES(91, 150.5, '2017-10-05', 90, 2);");
+
+            con.commit();
+
+            System.out.println("Información insertado correctamente");
+
+
+
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            
+            try {
+                con.rollback();
+                System.out.println("Se ha producido un error al insertar la información. Se restaura el estado anterior");
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+
+        }
+
+        try {
+            con.setAutoCommit(true);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+    }
+
+
 
     public void cerrarConection() throws SQLException{
         con.close();
